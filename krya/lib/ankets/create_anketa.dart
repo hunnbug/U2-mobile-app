@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:krya/ankets/look_for_anketas.dart';
 
 class CreateAnketaScreen extends StatefulWidget {
   @override
@@ -11,6 +12,7 @@ class _CreateAnketaScreenState extends State<CreateAnketaScreen> {
   final _surnameController = TextEditingController();
   final _patronymicController = TextEditingController();
   final _descriptionController = TextEditingController();
+  String? _lookingFor;
   String? _selectedGender;
   List<String> _selectedTags = [];
 
@@ -192,6 +194,54 @@ class _CreateAnketaScreenState extends State<CreateAnketaScreen> {
                 ],
               ),
               SizedBox(height: 32),
+              Text(
+                'Кого ищу *',
+                style: TextStyle(color: Colors.white, fontSize: 16),
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: RadioListTile<String>(
+                      title: Text('Мужчин', style: TextStyle(color: Colors.white)),
+                      value: 'Мужчин',
+                      groupValue: _lookingFor,
+                      onChanged: (value) {
+                        setState(() {
+                          _lookingFor = value;
+                        });
+                      },
+                      activeColor: Colors.white,
+                    ),
+                  ),
+                  Expanded(
+                    child: RadioListTile<String>(
+                      title: Text('Женщин', style: TextStyle(color: Colors.white)),
+                      value: 'Женщин',
+                      groupValue: _lookingFor,
+                      onChanged: (value) {
+                        setState(() {
+                          _lookingFor = value;
+                        });
+                      },
+                      activeColor: Colors.white,
+                    ),
+                  ),
+                  Expanded(
+                    child: RadioListTile<String>(
+                      title: Text('И тех и других', style: TextStyle(color: Colors.white)),
+                      value: 'И тех и других',
+                      groupValue: _lookingFor,
+                      onChanged: (value) {
+                        setState(() {
+                          _lookingFor = value;
+                        });
+                      },
+                      activeColor: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 32),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,
@@ -205,9 +255,23 @@ class _CreateAnketaScreenState extends State<CreateAnketaScreen> {
                       );
                       return;
                     }
-                    // Здесь можно обработать данные анкеты
+                    
+                    if (_lookingFor == null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Пожалуйста, выберите кого ищете')),
+                      );
+                      return;
+                    }
+
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text('Анкета успешно создана!')),
+                    );
+
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => LookForAnketasScreen(),
+                      ),
                     );
                   }
                 },
