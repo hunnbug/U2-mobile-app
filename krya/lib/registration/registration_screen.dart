@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'registration_screen_2.dart';
 import 'package:flutter/services.dart';
+import 'package:krya/login/login_screen.dart';
 
 class RegistrationScreen extends StatefulWidget {
   @override
@@ -12,6 +13,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   final _loginController = TextEditingController();
   final _phoneController = TextEditingController();
   final _emailController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _phoneController.text = '+7';
+  }
 
   @override
   void dispose() {
@@ -33,12 +40,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   }
 
   String? _validatePhone(String? value) {
-    if (value == null || value.isEmpty) {
+    if (value == null || value.isEmpty || !value.startsWith('+7')) {
       return 'Введите номер телефона';
     }
-    final regex = RegExp(r'^\+?\d{11,12}$');
-    if (!regex.hasMatch(value)) {
-      return 'Некорректный номер телефона';
+    final digits = value.replaceAll(RegExp(r'\D'), '');
+    if (digits.length != 11) {
+      return 'Введите 10 цифр после +7';
     }
     return null;
   }
@@ -107,11 +114,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     textAlign: TextAlign.center,
                     keyboardType: TextInputType.phone,
                     inputFormatters: [
-                      FilteringTextInputFormatter.allow(RegExp(r'^\+?\d*')),
+                      FilteringTextInputFormatter.allow(RegExp(r'^\+7\d{0,10}')),
                       LengthLimitingTextInputFormatter(
                         _phoneController.text.startsWith('+') ? 12 : 11
                       ),
-                      // Динамическое ограничение длины реализовано ниже через onChanged
                     ],
                     decoration: InputDecoration(
                       labelText: 'Номер телефона',
@@ -123,16 +129,21 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         borderSide: BorderSide(color: Colors.white),
                       ),
                     ),
-                    onChanged: (value) {
-                      // Динамически ограничиваем длину в зависимости от наличия "+"
-                      final maxLen = value.startsWith('+') ? 12 : 11;
-                      if (value.length > maxLen) {
-                        _phoneController.text = value.substring(0, maxLen);
+                      onChanged: (value) {
+                        if (!value.startsWith('+7')) {
+                          _phoneController.text = '+7';
+                          _phoneController.selection = TextSelection.fromPosition(
+                            TextPosition(offset: 2),
+                          );
+                          return;
+                      }
+                      if (value.length > 12) {
+                        _phoneController.text = value.substring(0, 12);
                         _phoneController.selection = TextSelection.fromPosition(
-                          TextPosition(offset: maxLen),
+                          TextPosition(offset: 12),
                         );
                       }
-                    },
+                    }
                   ),
                 ),
                 SizedBox(height: 20),
@@ -173,6 +184,19 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       );
                     }
                   },
+                ),
+                SizedBox(height: 10),
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => LoginScreen()),
+                    );
+                  },
+                  child: Text(
+                    "Уже есть аккаунт? Войти",
+                    style: TextStyle(color: Colors.white70),
+                  ),
                 ),
               ],
             ),
