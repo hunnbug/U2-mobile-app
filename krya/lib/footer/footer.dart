@@ -26,7 +26,7 @@ void onFooterTap(BuildContext context, int index) {
           surname: 'Фамилия',
           patronymic: 'Отчество',
           description: 'Описание',
-          photoUrl: 'https://example.com/photo.jpg',
+          photoUrl: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=facearea&w=600&h=600&facepad=2.5',
           tags: ['Тег1', 'Тег2'],
           gender: 'гендер',
           lookingFor: 'письбки',

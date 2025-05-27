@@ -34,6 +34,9 @@ class _MyAnketaScreenState extends State<MyAnketaScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final photoSize = screenWidth - 48;
+
     return Scaffold(
       bottomNavigationBar: AppBottomNavigationBar(
         currentIndex: _selectedFooterIndex,
@@ -52,7 +55,7 @@ class _MyAnketaScreenState extends State<MyAnketaScreen> {
       ),
       backgroundColor: Colors.black,
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24.0),
+        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 24.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -61,15 +64,15 @@ class _MyAnketaScreenState extends State<MyAnketaScreen> {
                 borderRadius: BorderRadius.circular(24),
                 child: Image.network(
                   widget.photoUrl!,
-                  width: 200,
-                  height: 200,
+                  width: photoSize,
+                  height: photoSize,
                   fit: BoxFit.cover,
                 ),
               )
             else
               Container(
-                width: 200,
-                height: 200,
+                width: photoSize,
+                height: photoSize,
                 decoration: BoxDecoration(
                   color: Colors.grey[800],
                   borderRadius: BorderRadius.circular(24),
@@ -111,6 +114,7 @@ class _MyAnketaScreenState extends State<MyAnketaScreen> {
             SizedBox(height: 8),
             Wrap(
               spacing: 8,
+              alignment: WrapAlignment.center,
               children: widget.tags
                   .map((tag) => Chip(
                         label: Text(tag, style: TextStyle(color: Colors.black)),
